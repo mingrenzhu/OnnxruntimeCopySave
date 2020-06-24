@@ -1,0 +1,48 @@
+trigger:
+  branches:
+    include:
+    - master
+  tags:
+    include:
+    - v*
+  paths:
+    include:
+    - '*'
+    exclude:
+    - README.md
+    - docs/*
+pr:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - '*'
+    exclude:
+    - README.md
+    - docs/*
+
+pool:
+    vmImage: 'macOS-10.14'
+steps:
+- checkout: self
+  submodules: true
+- bash: brew install watch gnu-sed
+  displayName: Install watch and gnu-sed
+# cmake 3.15 breaks Android NDK https://gitlab.kitware.com/cmake/cmake/issues/19515
+- script: pip install cmake==3.14.4 && alias cmake=/usr/local/bin/cmake && cmake --version
+  displayName: Install cmake 3.14.4
+- bash: ci/download_protoc.sh
+  displayName: Download protoc
+- bash: ci/build_dnnlibrary.sh
+  displayName: Build
+- bash: ci/start_android_emulator.sh
+  displayName: Start Android Emulator
+- bash: pip3 install --user onnx
+  displayName: Install ONNX
+- bash: ci/download_and_test_models.sh
+  displayName: Download And Test Models
+- bash: ci/build_aar.sh
+  env: 
+    BINTRAY_KEY: $(bintrayKey)
+  displayName: Build and Publish AAR package

@@ -1,0 +1,22 @@
+cmake-build-*/
+build/
+compile_commands.json
+.idea/
+*.swp
+*.swo
+.ccls-cache/
+.daq_pm/status/
+build*/
+table*.txt
+*.npy
+val.py
+
+# For onnx2daq python package
+.setuptools-cmake-build/
+dist/
+onnx2daq.egg-info/
+__pycache__/
+.eggs/
+
+.clangd/
+venv/

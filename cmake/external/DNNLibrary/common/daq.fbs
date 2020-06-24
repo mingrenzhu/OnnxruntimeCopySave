@@ -1,0 +1,531 @@
+namespace DNN;
+
+/// Int8 is deprecated, but int8_data in table Tensor is used, since a Tensor just stores value, not care about quantization method
+enum DataType:byte { Float32, Int8, Int32, Float16, Bool8,
+    QUANT8_ASYMM, QUANT8_SYMM, QUANT8_SYMM_PER_CHANNEL, 
+    QUANT16_ASYMM, QUANT16_SYMM}
+enum FuseCode:byte { None, Relu, Relu1, Relu6 }
+enum LayerType:byte {
+// Auto generated layer types start
+    CONV_2D,
+    AVERAGE_POOL_2D,
+    MAX_POOL_2D,
+    RELU,
+    SOFTMAX,
+    FULLY_CONNECTED,
+    ADD,
+    CONCATENATION,
+    DEPTHWISE_CONV_2D,
+    BATCH_TO_SPACE_ND,
+    SPACE_TO_BATCH_ND,
+    STRIDED_SLICE,
+    MUL,
+    DEQUANTIZE,
+    LOCAL_RESPONSE_NORMALIZATION,
+    TANH,
+    FLOOR,
+    LOGISTIC,
+    PRELU,
+    POW,
+    NEG,
+    MINIMUM,
+    MAXIMUM,
+    LOG,
+    ABS,
+    EXP,
+    SUB,
+// Auto generated layer types end
+    }
+
+table Tensor {
+    data_type:DataType;
+    int8_data: [uint8];
+    float32_data: [float32];
+    shape: [uint32];
+    name: string;
+    /// since flatbuffers doesn't have float16 data type, use uint16 instead
+    float16_data: [uint16];
+    bool8_data: [uint8];
+    int32_data: [int32];
+}
+
+/// For weights, and for features
+table QuantInfo {
+    name: string;
+    data_type: DataType;
+    /// a float32 array of scales, the length will be 1 for non per-channel quantization, and be channelDim for per-channel quantization
+    scales: [float32];
+    zero_point: int32;
+}
+
+table Input {
+    shape:[uint32];
+    name:string;
+}
+
+// Auto generated tables start
+table CONV_2D_Input {
+    input: string;
+    weight: string;
+    bias: string;
+    padding_left: int;
+    padding_right: int;
+    padding_top: int;
+    padding_bottom: int;
+    stride_x: int;
+    stride_y: int;
+    fuse_code: FuseCode;
+    nchw: bool;
+    dilation_x: int;
+    dilation_y: int;
+}
+
+table CONV_2D_Output {
+    output: string;
+}
+
+table CONV_2D {
+    input: CONV_2D_Input;
+    output: CONV_2D_Output;
+}
+
+table AVERAGE_POOL_2D_Input {
+    input: string;
+    padding_left: int;
+    padding_right: int;
+    padding_top: int;
+    padding_bottom: int;
+    stride_x: int;
+    stride_y: int;
+    kernel_width: int;
+    kernel_height: int;
+    fuse_code: FuseCode;
+}
+
+table AVERAGE_POOL_2D_Output {
+    output: string;
+}
+
+table AVERAGE_POOL_2D {
+    input: AVERAGE_POOL_2D_Input;
+    output: AVERAGE_POOL_2D_Output;
+}
+
+table MAX_POOL_2D_Input {
+    input: string;
+    padding_left: int;
+    padding_right: int;
+    padding_top: int;
+    padding_bottom: int;
+    stride_x: int;
+    stride_y: int;
+    kernel_width: int;
+    kernel_height: int;
+    fuse_code: FuseCode;
+}
+
+table MAX_POOL_2D_Output {
+    output: string;
+}
+
+table MAX_POOL_2D {
+    input: MAX_POOL_2D_Input;
+    output: MAX_POOL_2D_Output;
+}
+
+table RELU_Input {
+    input: string;
+}
+
+table RELU_Output {
+    output: string;
+}
+
+table RELU {
+    input: RELU_Input;
+    output: RELU_Output;
+}
+
+table SOFTMAX_Input {
+    input: string;
+    beta: float;
+}
+
+table SOFTMAX_Output {
+    output: string;
+}
+
+table SOFTMAX {
+    input: SOFTMAX_Input;
+    output: SOFTMAX_Output;
+}
+
+table FULLY_CONNECTED_Input {
+    input: string;
+    weight: string;
+    bias: string;
+    fuse_code: FuseCode;
+}
+
+table FULLY_CONNECTED_Output {
+    output: string;
+}
+
+table FULLY_CONNECTED {
+    input: FULLY_CONNECTED_Input;
+    output: FULLY_CONNECTED_Output;
+}
+
+table ADD_Input {
+    input1: string;
+    input2: string;
+    fuse_code: FuseCode;
+}
+
+table ADD_Output {
+    output: string;
+}
+
+table ADD {
+    input: ADD_Input;
+    output: ADD_Output;
+}
+
+table CONCATENATION_Input {
+    inputs: [string];
+    axis: int;
+}
+
+table CONCATENATION_Output {
+    output: string;
+}
+
+table CONCATENATION {
+    input: CONCATENATION_Input;
+    output: CONCATENATION_Output;
+}
+
+table DEPTHWISE_CONV_2D_Input {
+    input: string;
+    weight: string;
+    bias: string;
+    padding_left: int;
+    padding_right: int;
+    padding_top: int;
+    padding_bottom: int;
+    stride_x: int;
+    stride_y: int;
+    depth_multiplier: int;
+    fuse_code: FuseCode;
+}
+
+table DEPTHWISE_CONV_2D_Output {
+    output: string;
+}
+
+table DEPTHWISE_CONV_2D {
+    input: DEPTHWISE_CONV_2D_Input;
+    output: DEPTHWISE_CONV_2D_Output;
+}
+
+table BATCH_TO_SPACE_ND_Input {
+    input: string;
+    block_sizes: [int];
+}
+
+table BATCH_TO_SPACE_ND_Output {
+    output: string;
+}
+
+table BATCH_TO_SPACE_ND {
+    input: BATCH_TO_SPACE_ND_Input;
+    output: BATCH_TO_SPACE_ND_Output;
+}
+
+table SPACE_TO_BATCH_ND_Input {
+    input: string;
+    block_sizes: [int];
+    pads: [int];
+}
+
+table SPACE_TO_BATCH_ND_Output {
+    output: string;
+}
+
+table SPACE_TO_BATCH_ND {
+    input: SPACE_TO_BATCH_ND_Input;
+    output: SPACE_TO_BATCH_ND_Output;
+}
+
+table STRIDED_SLICE_Input {
+    input: string;
+    starts: [int];
+    ends: [int];
+    strides: [int];
+    begin_mask: int;
+    end_mask: int;
+    shrink_axis_mask: int;
+}
+
+table STRIDED_SLICE_Output {
+    output: string;
+}
+
+table STRIDED_SLICE {
+    input: STRIDED_SLICE_Input;
+    output: STRIDED_SLICE_Output;
+}
+
+table MUL_Input {
+    input1: string;
+    input2: string;
+    fuse_code: FuseCode;
+}
+
+table MUL_Output {
+    output: string;
+}
+
+table MUL {
+    input: MUL_Input;
+    output: MUL_Output;
+}
+
+table DEQUANTIZE_Input {
+    input: string;
+}
+
+table DEQUANTIZE_Output {
+    output: string;
+}
+
+table DEQUANTIZE {
+    input: DEQUANTIZE_Input;
+    output: DEQUANTIZE_Output;
+}
+
+table LOCAL_RESPONSE_NORMALIZATION_Input {
+    input: string;
+    radius: int;
+    bias: float;
+    alpha: float;
+    beta: float;
+}
+
+table LOCAL_RESPONSE_NORMALIZATION_Output {
+    output: string;
+}
+
+table LOCAL_RESPONSE_NORMALIZATION {
+    input: LOCAL_RESPONSE_NORMALIZATION_Input;
+    output: LOCAL_RESPONSE_NORMALIZATION_Output;
+}
+
+table TANH_Input {
+    input: string;
+}
+
+table TANH_Output {
+    output: string;
+}
+
+table TANH {
+    input: TANH_Input;
+    output: TANH_Output;
+}
+
+table FLOOR_Input {
+    input: string;
+}
+
+table FLOOR_Output {
+    output: string;
+}
+
+table FLOOR {
+    input: FLOOR_Input;
+    output: FLOOR_Output;
+}
+
+table LOGISTIC_Input {
+    input: string;
+}
+
+table LOGISTIC_Output {
+    output: string;
+}
+
+table LOGISTIC {
+    input: LOGISTIC_Input;
+    output: LOGISTIC_Output;
+}
+
+table PRELU_Input {
+    input: string;
+    alpha: string;
+}
+
+table PRELU_Output {
+    output: string;
+}
+
+table PRELU {
+    input: PRELU_Input;
+    output: PRELU_Output;
+}
+
+table POW_Input {
+    input: string;
+    exp: string;
+}
+
+table POW_Output {
+    output: string;
+}
+
+table POW {
+    input: POW_Input;
+    output: POW_Output;
+}
+
+table NEG_Input {
+    input: string;
+}
+
+table NEG_Output {
+    output: string;
+}
+
+table NEG {
+    input: NEG_Input;
+    output: NEG_Output;
+}
+
+table MINIMUM_Input {
+    input1: string;
+    input2: string;
+}
+
+table MINIMUM_Output {
+    output: string;
+}
+
+table MINIMUM {
+    input: MINIMUM_Input;
+    output: MINIMUM_Output;
+}
+
+table MAXIMUM_Input {
+    input1: string;
+    input2: string;
+}
+
+table MAXIMUM_Output {
+    output: string;
+}
+
+table MAXIMUM {
+    input: MAXIMUM_Input;
+    output: MAXIMUM_Output;
+}
+
+table LOG_Input {
+    input: string;
+}
+
+table LOG_Output {
+    output: string;
+}
+
+table LOG {
+    input: LOG_Input;
+    output: LOG_Output;
+}
+
+table ABS_Input {
+    input: string;
+}
+
+table ABS_Output {
+    output: string;
+}
+
+table ABS {
+    input: ABS_Input;
+    output: ABS_Output;
+}
+
+table EXP_Input {
+    input: string;
+}
+
+table EXP_Output {
+    output: string;
+}
+
+table EXP {
+    input: EXP_Input;
+    output: EXP_Output;
+}
+
+table SUB_Input {
+    input1: string;
+    input2: string;
+    fuse_code: FuseCode;
+}
+
+table SUB_Output {
+    output: string;
+}
+
+table SUB {
+    input: SUB_Input;
+    output: SUB_Output;
+}
+
+// Auto generated tables end
+
+
+table Layer {
+    type:LayerType;
+// Auto generated fields start
+    CONV_2D_param:CONV_2D;
+    AVERAGE_POOL_2D_param:AVERAGE_POOL_2D;
+    MAX_POOL_2D_param:MAX_POOL_2D;
+    RELU_param:RELU;
+    SOFTMAX_param:SOFTMAX;
+    FULLY_CONNECTED_param:FULLY_CONNECTED;
+    ADD_param:ADD;
+    CONCATENATION_param:CONCATENATION;
+    DEPTHWISE_CONV_2D_param:DEPTHWISE_CONV_2D;
+    BATCH_TO_SPACE_ND_param:BATCH_TO_SPACE_ND;
+    SPACE_TO_BATCH_ND_param:SPACE_TO_BATCH_ND;
+    STRIDED_SLICE_param:STRIDED_SLICE;
+    MUL_param:MUL;
+    DEQUANTIZE_param:DEQUANTIZE;
+    LOCAL_RESPONSE_NORMALIZATION_param:LOCAL_RESPONSE_NORMALIZATION;
+    TANH_param:TANH;
+    FLOOR_param:FLOOR;
+    LOGISTIC_param:LOGISTIC;
+    PRELU_param:PRELU;
+    POW_param:POW;
+    NEG_param:NEG;
+    MINIMUM_param:MINIMUM;
+    MAXIMUM_param:MAXIMUM;
+    LOG_param:LOG;
+    ABS_param:ABS;
+    EXP_param:EXP;
+    SUB_param:SUB;
+// Auto generated fields end
+}
+
+table Model {
+    layers:[Layer];
+    initializers:[Tensor];
+    inputs:[Input];
+    quant_infos:[QuantInfo];
+    outputs:[string];
+    version:uint32;
+}
+
+root_type Model;
